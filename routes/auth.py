@@ -1,82 +1,44 @@
-from fastapi import FastAPI, Depends, HTTPException, status , APIRouter
-from sqlmodel import SQLModel, Field, Session, create_engine, select
-from pydantic import BaseModel
-from passlib.context import CryptContext
-from jose import JWTError, jwt
-from datetime import datetime, timedelta
-from dotenv import load_dotenv
+from typing import Annotated, List
+from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi.security import OAuth2PasswordRequestForm
+from sqlmodel import Session
+from schemas.user import UserCreate, UserResponse, Token
 from models.user import User
-import os
+from auth import get_password_hash, verify_password, create_access_token, get_current_user
+from db import get_session
+from sqlmodel import select
+auth_router = APIRouter(prefix = "/auth")
+ 
+# Signup Endpoint
+@auth_router.post("/signup", response_model=UserResponse)
+def signup(user_create: UserCreate, session: Session = Depends(get_session)):
+    # Check if user already exists
+    user_exists = session.exec(select(User).where(User.email == user_create.email)).first()
+    if user_exists:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Email already registered")
 
-# Load environment variables
-load_dotenv()
-DATABASE_URL = os.getenv("DATABASE_URL")
-
-# App setup
-app = FastAPI()
-engine = create_engine(DATABASE_URL)
-
-
-
-SQLModel.metadata.create_all(engine)
-
-# Password hashing
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
-
-# JWT configuration
-SECRET_KEY = "your-secret-key"
-ALGORITHM = "HS256"
-ACCESS_TOKEN_EXPIRE_MINUTES = 30
-
-# Utility functions
-def get_password_hash(password: str) -> str:
-    return pwd_context.hash(password)
-
-def verify_password(plain_password: str, hashed_password: str) -> bool:
-    return pwd_context.verify(plain_password, hashed_password)
-
-def create_access_token(data: dict, expires_delta: timedelta | None = None):
-    to_encode = data.copy()
-    expire = datetime.utcnow() + (expires_delta or timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES))
-    to_encode.update({"exp": expire})
-    return jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
-
-# Dependency
-def get_session():
-    with Session(engine) as session:
-        yield session
-
-auth_router = APIRouter(prefix="/auth")
-
-# Signup
-@auth_router.post("/signup")
-def signup(username: str, email: str, password: str, session: Session = Depends(get_session)):
-    existing_user = session.exec(select(User).where(User.username == username)).first()
-    if existing_user:
-        raise HTTPException(status_code=400, detail="Username already taken")
-
-    user = User(
-        username=username,
-        email=email,
-        password_hash=get_password_hash(password)
-    )
-    session.add(user)
+    # Hash the password and create user
+    hashed_password = get_password_hash(user_create.password)
+    new_user = User(username=user_create.username, email=user_create.email, hashed_password=hashed_password)
+    session.add(new_user)
     session.commit()
-    session.refresh(user)
-    return {"message": "User created successfully", "user_id": user.id}
+    session.refresh(new_user)
+    return new_user
 
-# Login
-class Token(BaseModel):
-    access_token: str
-    token_type: str
-
+# Login Endpoint
+#NOTE: You have to tell the frontend developer that he has to send the email in the key of username and should ask from the user the email but put it against the username key in the header.
 @auth_router.post("/login", response_model=Token)
-def login(username: str, password: str, session: Session = Depends(get_session)):
-    user = session.exec(select(User).where(User.username == username)).first()
-    if not user or not verify_password(password, user.password_hash):
-        raise HTTPException(status_code=401, detail="Invalid credentials")
-
-    access_token = create_access_token(data={"sub": user.username})
-    return {"access_token": access_token, "token_type": "bearer"}
+def login(form_data: Annotated[OAuth2PasswordRequestForm, Depends(OAuth2PasswordRequestForm)], session: Session = Depends(get_session)):
+    db_user = session.exec(select(User).where(User.email == form_data.username)).first()
+    if not db_user or not verify_password(form_data.password, db_user.hashed_password):
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Invalid credentials")
     
+    # Create JWT token
+    access_token = create_access_token(data={"sub": str(db_user.id)})
+    return {"access_token": access_token, "token_type": "bearer"}
 
+# Token Refresh Endpoint
+@auth_router.post("/token/refresh", response_model=Token)
+def refresh_token(current_user: User = Depends(get_current_user)):
+    access_token = create_access_token(data={"sub": str(current_user.id)})
+    return {"access_token": access_token, "token_type": "bearer"}

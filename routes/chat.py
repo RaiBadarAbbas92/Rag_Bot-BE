@@ -1,37 +1,26 @@
 from fastapi import FastAPI, File, UploadFile, HTTPException, APIRouter, Depends
 from langchain.schema import Document
+from auth import get_current_user
 from langchain.indexes import VectorstoreIndexCreator
 from langchain.text_splitter import CharacterTextSplitter
 from langchain_google_genai import GoogleGenerativeAI, GoogleGenerativeAIEmbeddings
 from langchain.memory import ConversationBufferWindowMemory
 from langchain.prompts import PromptTemplate
 from models.bot import Chatbot
+from models.user import User
 from uuid import uuid4
+from sqlmodel import Session, select
 import os
+from db import get_session 
 
 import json
 from dotenv import load_dotenv
-from sqlmodel import Field, SQLModel, Session, create_engine, select
 from typing import Optional
 
 load_dotenv() 
 
 app = FastAPI()
 
-# Database setup 
-DATABASE_URL = os.getenv("DATABASE_URL")
-engine = create_engine(DATABASE_URL, echo=True)
-
-# Define User model
-
-# Define Chatbot model
-
-SQLModel.metadata.create_all(engine)
-
-# Dependency to get DB session
-def get_session():
-    with Session(engine) as session:
-        yield session
 
 # Initialize LLM and memory
 llm = GoogleGenerativeAI(model="gemini-1.5-flash", google_api_key=os.getenv("GOOGLE_API_KEY"))
@@ -62,7 +51,7 @@ def create_prompt(persona_settings, user_query):
 ai_router = APIRouter(prefix="/ai")
 
 @ai_router.post("/upload_file/{name}/{description}/{tone}/{personality}")
-async def upload_file(name: str, description: str, tone: str, personality: str, file: UploadFile = File(...), session: Session = Depends(get_session)):
+async def upload_file(name: str, description: str, tone: str, personality: str, file: UploadFile = File(...) , session: Session = Depends(get_session) , current_user: User = Depends(get_current_user)):
     chatbot_id = str(uuid4())
 
     try:
@@ -87,7 +76,7 @@ async def upload_file(name: str, description: str, tone: str, personality: str, 
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error processing the uploaded file: {str(e)}")
 @ai_router.post("/ask/{chatbot_id}")
-async def ask_question(chatbot_id: str, question: str, session: Session = Depends(get_session)):
+async def ask_question(chatbot_id: str, question: str, session: Session = Depends(get_session) , current_user: User = Depends(get_current_user)):
     # Fetch the chatbot from the database
     chatbot = session.exec(select(Chatbot).where(Chatbot.id == chatbot_id)).first()
 
@@ -121,13 +110,13 @@ async def ask_question(chatbot_id: str, question: str, session: Session = Depend
     return {"response": response}
 # Endpoint to get a list of all chatbots
 @ai_router.get("/chatbots")
-async def get_all_chatbots(session: Session = Depends(get_session)):
+async def get_all_chatbots(session: Session = Depends(get_session) , current_user: User = Depends(get_current_user)):
     chatbots = session.exec(select(Chatbot)).all()
     return {"chatbots": chatbots}
 
 # Endpoint to update a chatbot
 @ai_router.put("/chatbots/{chatbot_id}")
-async def update_chatbot(chatbot_id: str, name: str, description: str, tone: str, personality: str, session: Session = Depends(get_session)):
+async def update_chatbot(chatbot_id: str, name: str, description: str, tone: str, personality: str, session: Session = Depends(get_session) , current_user: User = Depends(get_current_user)):
     chatbot = session.exec(select(Chatbot).where(Chatbot.id == chatbot_id)).first()
 
     if not chatbot:
@@ -145,7 +134,7 @@ async def update_chatbot(chatbot_id: str, name: str, description: str, tone: str
 
 # Endpoint to delete a chatbot
 @ai_router.delete("/chatbots/{chatbot_id}")
-async def delete_chatbot(chatbot_id: str, session: Session = Depends(get_session)):
+async def delete_chatbot(chatbot_id: str, session: Session = Depends(get_session) , current_user: User = Depends(get_current_user)):
     chatbot = session.exec(select(Chatbot).where(Chatbot.id == chatbot_id)).first()
 
     if not chatbot:
