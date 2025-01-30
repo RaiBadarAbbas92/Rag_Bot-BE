@@ -3,7 +3,10 @@
   "builds": [
     {
       "src": "hello.py",
-      "use": "@vercel/python"
+      "use": "@vercel/python",
+      "config": {
+        "runtime": "python310"
+      }
     }
   ],
   "routes": [
@@ -13,5 +16,6 @@
     }
   ],
   "env": {
-      "PYTHON_VERSION": "3.10"  }
+    "PYTHON_VERSION": "3.10"
+  }
 }
