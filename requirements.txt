@@ -6,9 +6,7 @@ langchain-google-genai
 uvicorn
 pycryptodome
 pydantic[email]
-v
-pymupdf
-pypdf2
+
 python-jose
 sqlmodel
 bcrypt
@@ -18,7 +16,6 @@ bs4
 passlib
 numpy
 psutil
-xlsxwriter
 openpyxl
 fastapi-mail
 psycopg2-binary
