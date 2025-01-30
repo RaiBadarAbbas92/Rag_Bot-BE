@@ -17,7 +17,6 @@ python-multipart
 bs4
 passlib
 numpy
-metatrader5
 psutil
 xlsxwriter
 openpyxl
