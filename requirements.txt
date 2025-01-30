@@ -18,7 +18,7 @@
     bs4
     langchain-core
     passlib
-    psycopg2
+psycopg-binary 
     numpy
     seaborn
     metatrader5
