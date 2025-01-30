@@ -1,1 +1,29 @@
 
+    asyncpg
+    fastapi
+    jose
+    langchain-google-genai
+    langchain
+    uvicorn
+    pycryptodome
+    pydantic[email]
+    
+    pymupdf
+    pypdf2
+    python-jose
+    sqlmodel
+    bcrypt
+    python-dotenv
+    langchain-community
+    python-multipart
+    bs4
+    langchain-core
+    passlib
+psycopg-binary 
+    numpy
+    seaborn
+    metatrader5
+    psutil
+    xlsxwriter
+    openpyxl
+    fastapi-mail
