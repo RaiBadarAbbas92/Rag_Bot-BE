@@ -6,7 +6,7 @@ langchain-google-genai
 uvicorn
 pycryptodome
 pydantic[email]
-
+metatrader5
 python-jose
 sqlmodel
 bcrypt
