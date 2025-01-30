@@ -2,7 +2,7 @@ asyncpg
 fastapi
 jose
 langchain-google-genai
-langchain
+
 uvicorn
 pycryptodome
 pydantic[email]
@@ -13,10 +13,8 @@ python-jose
 sqlmodel
 bcrypt
 python-dotenv
-langchain-community
 python-multipart
 bs4
-langchain-core
 passlib
 numpy
 seaborn
@@ -25,4 +23,4 @@ psutil
 xlsxwriter
 openpyxl
 fastapi-mail
-psycopg-binary
+psycopg2-binary
