@@ -777,7 +777,7 @@ name = "metatrader5"
 version = "5.0.4803"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
-    { name = "numpy", marker = "python_full_version < '3.12.4'" },
+    { name = "numpy", marker = "python_full_version < '3.10.0'" },
 ]
 wheels = [
     { url = "https://files.pythonhosted.org/packages/bd/8d/d654b0226e379cf7bec9a53596d77a82d65a73b1cdf358d8a5f06fcef748/MetaTrader5-5.0.4803-cp310-cp310-win_amd64.whl", hash = "sha256:eccf43a4956492df214a718a825eacda5fb29e2565231a287257844fd54b1cac", size = 50042 },
@@ -1279,7 +1279,7 @@ dependencies = [
     { name = "fastapi-mail", marker = "python_full_version < '3.12.4'" },
     { name = "jose", marker = "python_full_version < '3.12.4'" },
     { name = "langchain-google-genai", marker = "python_full_version < '3.12.4'" },
-    { name = "metatrader5", marker = "python_full_version < '3.12.4'" },
+    { name = "metatrader5", marker = "python_full_version < '3.10.0'" },
     { name = "openpyxl", marker = "python_full_version < '3.12.4'" },
     { name = "passlib", marker = "python_full_version < '3.12.4'" },
     { name = "psutil", marker = "python_full_version < '3.12.4'" },
