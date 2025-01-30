@@ -1280,7 +1280,6 @@ dependencies = [
     { name = "jose", marker = "python_full_version < '3.12.4'" },
     { name = "langchain-google-genai", marker = "python_full_version < '3.12.4'" },
     { name = "metatrader5", marker = "python_full_version < '3.12.4'" },
-    { name = "numpy", marker = "python_full_version < '3.12.4'" },
     { name = "openpyxl", marker = "python_full_version < '3.12.4'" },
     { name = "passlib", marker = "python_full_version < '3.12.4'" },
     { name = "psutil", marker = "python_full_version < '3.12.4'" },
@@ -1292,8 +1291,6 @@ dependencies = [
     { name = "python-multipart", marker = "python_full_version < '3.12.4'" },
     { name = "sqlmodel", marker = "python_full_version < '3.12.4'" },
     { name = "uvicorn", marker = "python_full_version < '3.12.4'" },
-    { name = "v", marker = "python_full_version < '3.12.4'" },
-    { name = "xlsxwriter", marker = "python_full_version < '3.12.4'" },
 ]
 
 [package.metadata]
@@ -1306,7 +1303,6 @@ requires-dist = [
     { name = "jose", specifier = ">=1.0.0" },
     { name = "langchain-google-genai", specifier = ">=2.0.7" },
     { name = "metatrader5", specifier = ">=5.0.4803" },
-    { name = "numpy", specifier = ">=2.2.1" },
     { name = "openpyxl", specifier = ">=3.1.5" },
     { name = "passlib", specifier = ">=1.7.4" },
     { name = "psutil", specifier = ">=6.1.1" },
@@ -1318,8 +1314,6 @@ requires-dist = [
     { name = "python-multipart", specifier = ">=0.0.20" },
     { name = "sqlmodel", specifier = ">=0.0.22" },
     { name = "uvicorn", specifier = ">=0.34.0" },
-    { name = "v", specifier = ">=1" },
-    { name = "xlsxwriter", specifier = ">=3.2.0" },
 ]
 
 [[package]]
@@ -1518,22 +1512,4 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/4b/4d/938bd85e5bf2edeec766267a5015ad969730bb91e31b44021dfe8b22df6c/uvicorn-0.34.0.tar.gz", hash = "sha256:404051050cd7e905de2c9a7e61790943440b3416f49cb409f965d9dcd0fa73e9", size = 76568 }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/61/14/33a3a1352cfa71812a3a21e8c9bfb83f60b0011f5e36f2b1399d51928209/uvicorn-0.34.0-py3-none-any.whl", hash = "sha256:023dc038422502fa28a09c7a30bf2b6991512da7dcdb8fd35fe57cfc154126f4", size = 62315 },
-]
-
-[[package]]
-name = "v"
-version = "1"
-source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/18/da/1b95e88636cbe501b023b970c906c4c5070c58e437fa2d496c525edfb6b5/v-1.tar.gz", hash = "sha256:e3c5cec546cc37f56cad894546816829353b3470545c69404c400112e7db55b4", size = 953 }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/73/78/9b5c2a33b8b70e529fda65b77888a210dbafc2bcb72852cdd874394b554d/v-1-py3-none-any.whl", hash = "sha256:4c7cda5b756701dc6b02d4bc31cd9bb83dc329201f8c6b5fdd5cf396736580d3", size = 1383 },
-]
-
-[[package]]
-name = "xlsxwriter"
-version = "3.2.0"
-source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/a6/c3/b36fa44a0610a0f65d2e65ba6a262cbe2554b819f1449731971f7c16ea3c/XlsxWriter-3.2.0.tar.gz", hash = "sha256:9977d0c661a72866a61f9f7a809e25ebbb0fb7036baa3b9fe74afcfca6b3cb8c", size = 198732 }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/a7/ea/53d1fe468e63e092cf16e2c18d16f50c29851242f9dd12d6a66e0d7f0d02/XlsxWriter-3.2.0-py3-none-any.whl", hash = "sha256:ecfd5405b3e0e228219bcaf24c2ca0915e012ca9464a14048021d21a995d490e", size = 159925 },
 ]
